@@ -1,6 +1,6 @@
-import { ShoppingCart, Timer, Package, Coffee } from 'phosphor-react'
-import { CoffeeCard } from './Components/CoffeeCard'
-import coffeeData from '../../coffee-data'
+import { ShoppingCart, Timer, Package, Coffee } from "phosphor-react";
+import { CoffeeCard } from "./Components/CoffeeCard";
+import coffeeData from "../../coffee-data";
 
 import {
   CoffeeCardContainer,
@@ -13,9 +13,9 @@ import {
   PackageItem,
   ShoppingCartItem,
   TimerItem,
-} from './styles'
+} from "./styles";
 
-import homeCoffeePoster from '../../assets/home-coffee-poster.svg'
+import homeCoffeePoster from "../../assets/home-coffee-poster.svg";
 
 export function Home() {
   return (
@@ -72,5 +72,5 @@ export function Home() {
         </CoffeeCardContainer>
       </CoffeeSection>
     </HomeContainer>
-  )
+  );
 }

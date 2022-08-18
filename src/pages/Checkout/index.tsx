@@ -1,14 +1,14 @@
-import { FormFields } from './Components/FormFields'
-import { useCart } from '../../Context/CartContext'
-import { CartItem } from './Components/CartItem'
-import { EmptyCart } from './Components/EmptyCart'
-import { useEffect, useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm, FormProvider } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { useValidation } from '../../hooks/useValidation'
-import { useFormatter } from '../../hooks/useFormatter'
-import { Loading } from '../../Components/Loading'
+import { FormFields } from "./Components/FormFields";
+import { useCart } from "../../Context/CartContext";
+import { CartItem } from "./Components/CartItem";
+import { EmptyCart } from "./Components/EmptyCart";
+import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, FormProvider } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useValidation } from "../../hooks/useValidation";
+import { useFormatter } from "../../hooks/useFormatter";
+import { Loading } from "../../Components/Loading";
 
 import {
   CalcTotal,
@@ -19,90 +19,81 @@ import {
   FinalizeOrderContent,
   Form,
   FinalizeOrderButton,
-} from './styles'
+} from "./styles";
 
 export type FinalizeOrderData = {
-  cep: string
-  street: string
-  number: string
-  complement: string
-  district: string
-  city: string
-  uf: string
-  payment: string
-}
+  cep: string;
+  street: string;
+  number: string;
+  complement: string;
+  district: string;
+  city: string;
+  uf: string;
+  payment: string;
+};
 
 export function Checkout() {
-  const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    window.scroll(0, 0)
-  }, [])
+    window.scroll(0, 0);
+  }, []);
 
-  const { cartItems, paymentMethod, getFinalizedOrderData } = useCart()
-  const { finalizeOrderSchemaValidation } = useValidation()
+  const { cartItems, paymentMethod, getFinalizedOrderData } = useCart();
+  const { finalizeOrderSchemaValidation } = useValidation();
 
-  // um array com todos os totalPrice dos cafés que foram enviados para o carrinho
-  const arrayTotalPriceOfItems = cartItems.map((item) => item.totalPrice)
+  const arrayTotalPriceOfItems = cartItems.map((item) => item.totalPrice);
 
-  // somatória de todos os totalPrice que foram enviados para o carrinho
   const totalPriceOfItems = arrayTotalPriceOfItems
     ? arrayTotalPriceOfItems.reduce((acc, item) => {
-        return acc + item
+        return acc + item;
       }, 0)
-    : 1
+    : 1;
 
-  const shipping = 3.5
-  const total = totalPriceOfItems + shipping
+  const shipping = 3.5;
+  const total = totalPriceOfItems + shipping;
 
-  // formatar os valores de frete, total dos items do carrinho somados e o total
-  // de itens comprados para reais R$
-  const { currency: totalOfItems } = useFormatter(totalPriceOfItems)
-  const { currency: shippingFormatted } = useFormatter(shipping)
-  const { currency: totalFormatted } = useFormatter(total)
+  const { currency: totalOfItems } = useFormatter(totalPriceOfItems);
+  const { currency: shippingFormatted } = useFormatter(shipping);
+  const { currency: totalFormatted } = useFormatter(total);
 
-  const isCartItemEmpty = cartItems.length === 0
+  const isCartItemEmpty = cartItems.length === 0;
 
-  // passando a validação do formuário
-  // verificar validação no hook useValidation
   const finalizeOrderForm = useForm<FinalizeOrderData>({
     resolver: zodResolver(finalizeOrderSchemaValidation),
     defaultValues: {
-      cep: '',
-      street: '',
-      number: '',
-      complement: '',
-      district: '',
-      city: '',
-      uf: '',
-      payment: '',
+      cep: "",
+      street: "",
+      number: "",
+      complement: "",
+      district: "",
+      city: "",
+      uf: "",
+      payment: "",
     },
-  })
+  });
 
-  const { handleSubmit } = finalizeOrderForm
+  const { handleSubmit } = finalizeOrderForm;
 
-  // etápa final do pedido
-  // função para enviar o pedido
   function handleFinalizeOrder(data: FinalizeOrderData) {
-    setIsLoading(true)
+    setIsLoading(true);
 
     const orderData = {
       ...data,
       uf: data.uf.toUpperCase(),
       payment: paymentMethod,
-    }
+    };
 
     try {
-      // setTimeout para simular o tempo de carregamento de uma aplicação real
       setTimeout(() => {
-        getFinalizedOrderData(orderData)
+        getFinalizedOrderData(orderData);
 
-        navigate('/success')
-      }, 2000)
+        navigate("/success");
+      }, 2000);
     } catch (error) {
-      console.log(error)
-      navigate('/')
+      console.log(error);
+      navigate("/");
     }
   }
 
@@ -132,11 +123,11 @@ export function Checkout() {
               </CalcTotalItens>
               <CalcTotalShipping>
                 <span>Entrega</span>
-                <span>{!isCartItemEmpty ? shippingFormatted : '0'}</span>
+                <span>{!isCartItemEmpty ? shippingFormatted : "0"}</span>
               </CalcTotalShipping>
               <CalcTotal>
                 <span>Total</span>
-                <span>{!isCartItemEmpty ? totalFormatted : '0'}</span>
+                <span>{!isCartItemEmpty ? totalFormatted : "0"}</span>
               </CalcTotal>
             </CalcTotalSection>
 
@@ -147,5 +138,5 @@ export function Checkout() {
         </FinalizeOrderContainer>
       </Form>
     </>
-  )
+  );
 }
